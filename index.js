@@ -3,9 +3,11 @@ const app = express();
 const axios = require("axios").default;
 const cors = require("cors");
 const dotenv = require('dotenv')
+const compression = require('compression');
 dotenv.config({path:"./.env"})
 
 app.use(cors());
+app.use(compression())
 
 app.get("/", (req, res) => {
   axios.get(process.env.URL)
