@@ -9,7 +9,7 @@ dotenv.config({path:"./.env"})
 app.use(cors());
 app.use(compression())
 
-app.get("/", (req, res) => {
+app.get("/music/api", (req, res) => {
   axios.get(process.env.URL)
   .then((data) =>{
     res.status(200).json({
