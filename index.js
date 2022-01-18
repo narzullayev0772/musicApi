@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
   .then((data) =>{
     res.status(200).json({
         status:"success",
-        // tracks: data.data.split("data-track=").map((e,index)=>index>0?e.split("data-title")[0]:null)
+        tracks: data.data.split("data-track=").map((e,index)=>index>0?e.split("data-title")[0]:null)
     })
   }
   );
