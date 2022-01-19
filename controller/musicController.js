@@ -4,8 +4,9 @@ trackCreator = (track, id) => {
   if(id>0)
   return {
     id: 20-id,
-    track: Buffer.from(track.split("\ndata-title")[0]).toString("base64"),
-    title: Buffer.from(track.split(`data-title=`)[1].split("data-artist")[0]).toString("base64"),
+    track: track.split("\ndata-title")[0],
+    trackName: track.split(`data-title=`)[1].split("data-artist")[0].split("-")[0],
+    trackAutor: track.split(`data-title=`)[1].split("data-artist")[0].split("-")[1],
   };
 };
 module.exports = trackCreator
