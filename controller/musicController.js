@@ -1,10 +1,11 @@
 const axios = require("axios").default;
 
 trackCreator = (track, id) => {
+  if(id>0)
   return {
-    id: id,
-    track: id ? track.split("\ndata-title")[0] : "",
-    title: id ? track.split(`data-title=`)[1].split("data-artist")[0] : "",
+    id: 20-id,
+    track: Buffer.from(track.split("\ndata-title")[0]).toString("base64"),
+    title: Buffer.from(track.split(`data-title=`)[1].split("data-artist")[0]).toString("base64"),
   };
 };
 module.exports = trackCreator
@@ -18,7 +19,7 @@ const getterAll = (env,req,res) => {
         1,
       tracks: data.data
         .split(`data-track=`)
-        .map((e, index) => trackCreator(e, index)),
+        .map((e, index) => trackCreator(e, index)).reverse(),
     });
   });
 };
