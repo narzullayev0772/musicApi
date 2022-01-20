@@ -25,6 +25,6 @@ router.get("/udar/:page", udarMusicPage);
 router.get("/turk", turkMusic);
 router.get("/turk/:page", turkMusicPage);
 
-router.get("/search", search);
+router.post("/search", search);
 
 module.exports = router;
