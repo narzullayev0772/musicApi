@@ -1,19 +1,19 @@
 const axios = require("axios").default;
 
-// const trackCreator = (track, id) => {
-//   if (id > 0)
-//     return {
-//       track: track.split("\ndata-title")[0],
-//       trackName: track
-//         .split(`data-title=`)[1]
-//         .split("data-artist")[0]
-//         .split("-")[0],
-//       trackAutor: track
-//         .split(`data-title=`)[1]
-//         .split("data-artist")[0]
-//         .split("-")[1],
-//     };
-// };
+const trackCreator = (track, id) => {
+  if (id > 0)
+    return {
+      track: track.split("\ndata-title")[0],
+      trackName: track
+        .split(`data-title=`)[1]
+        .split("data-artist")[0]
+        .split("-")[0],
+      trackAutor: track
+        .split(`data-title=`)[1]
+        .split("data-artist")[0]
+        .split("-")[1],
+    };
+};
 
 // const trackCreator2 = (el,index)=>{
 //   return {
@@ -37,9 +37,9 @@ const axios = require("axios").default;
 
 
 
-// module.exports = trackCreator;
+module.exports = trackCreator;
 
-const trackCreator = (el,id)=>{
+const trackCreatorSearch = (el,id)=>{
   if(id>0)
   return {
     id:id,
@@ -82,7 +82,7 @@ module.exports.search = async (req, res) => {
     // tracks: data1.data
     //   .split(`data-track=`)
     //   .map((e, index) => trackCreator(e, index)).concat(data2.data.split(`data-track="`).map((el, index) => trackCreator2(el,index))),
-     full:data3.split("data-norber=").map((el,index)=>trackCreator(el,index))
+     full:data3.split("data-norber=").map((el,index)=>trackCreatorSearch(el,index))
   });
 };
 
