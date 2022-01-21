@@ -43,9 +43,15 @@ const trackCreatorSearch = (el,id)=>{
   if(id>0)
   return {
     id:id,
-    track:el.split(`data-xftitle`)[0],
-    trackName:el.split(`data-xftitle=`)[1].split("data-time")[0].split("-")[1],
-    trackAuthor:el.split(`data-xftitle=`)[1].split("data-time")[0].split("-")[0],
+    track:el.split(`data-xftitle`)[0].replaceAll(`"`, "")
+    .replaceAll("&#039;", "'")
+    .replaceAll("&amp;", "&"),
+    trackName:el.split(`data-xftitle=`)[1].split("data-time")[0].split("-")[1].replaceAll(`"`, "")
+    .replaceAll("&#039;", "'")
+    .replaceAll("&amp;", "&"),
+    trackAuthor:el.split(`data-xftitle=`)[1].split("data-time")[0].split("-")[0].replaceAll(`"`, "")
+    .replaceAll("&#039;", "'")
+    .replaceAll("&amp;", "&"),
   }
 }
 
