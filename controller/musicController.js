@@ -3,15 +3,31 @@ const axios = require("axios").default;
 const trackCreator = (track, id) => {
   if (id > 0)
     return {
-      track: track.split("\ndata-title")[0],
+      track: track
+        .split("\ndata-title")[0]
+        .replace(`"`, "")
+        .replace("&#039;", "'")
+        .replace("&amp;", "&")
+        .replace(`"`, "")
+        .replace(`"`, ""),
       trackName: track
         .split(`data-title=`)[1]
         .split("data-artist")[0]
-        .split("-")[0],
+        .split("-")[0]
+        .replace(`"`, "")
+        .replace("&#039;", "'")
+        .replace("&amp;", "&")
+        .replace(`"`, "")
+        .replace(`"`, ""),
       trackAutor: track
         .split(`data-title=`)[1]
         .split("data-artist")[0]
-        .split("-")[1],
+        .split("-")[1]
+        .replace(`"`, "")
+        .replace("&#039;", "'")
+        .replace("&amp;", "&")
+        .replace(`"`, "")
+        .replace(`"`, ""),
     };
 };
 
