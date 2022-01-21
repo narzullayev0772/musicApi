@@ -82,7 +82,7 @@ module.exports.search = async (req, res) => {
     // tracks: data1.data
     //   .split(`data-track=`)
     //   .map((e, index) => trackCreator(e, index)).concat(data2.data.split(`data-track="`).map((el, index) => trackCreator2(el,index))),
-     full:data3.split("data-norber=").map((el,index)=>trackCreatorSearch(el,index))
+     tracks:data3.split("data-norber=").map((el,index)=>trackCreatorSearch(el,index))
   });
 };
 
