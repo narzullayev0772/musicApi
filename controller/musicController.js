@@ -35,25 +35,33 @@ const trackCreator = (track, id) => {
 //   }
 // }
 
-
-
 module.exports = trackCreator;
 
-const trackCreatorSearch = (el,id)=>{
-  if(id>0)
-  return {
-    id:id,
-    track:el.split(`data-xftitle`)[0].replaceAll(`"`, "")
-    .replaceAll("&#039;", "'")
-    .replaceAll("&amp;", "&"),
-    trackName:el.split(`data-xftitle=`)[1].split("data-time")[0].split("-")[1].replaceAll(`"`, "")
-    .replaceAll("&#039;", "'")
-    .replaceAll("&amp;", "&"),
-    trackAuthor:el.split(`data-xftitle=`)[1].split("data-time")[0].split("-")[0].replaceAll(`"`, "")
-    .replaceAll("&#039;", "'")
-    .replaceAll("&amp;", "&"),
-  }
-}
+const trackCreatorSearch = (el, id) => {
+  if (id > 0)
+    return {
+      id: id,
+      track: el.split(`data-xftitle`)[0].replace(`"`, "").replace(`"`, ""),
+      trackName: el
+        .split(`data-xftitle=`)[1]
+        .split("data-time")[0]
+        .split("-")[1]
+        .replace(`"`, "")
+        .replace("&#039;", "'")
+        .replace("&amp;", "&")
+        .replace(`"`, "")
+        .replace(`"`, ""),
+      trackAuthor: el
+        .split(`data-xftitle=`)[1]
+        .split("data-time")[0]
+        .split("-")[0]
+        .replace(`"`, "")
+        .replace("&#039;", "'")
+        .replace("&amp;", "&")
+        .replace(`"`, "")
+        .replace(`"`, ""),
+    };
+};
 
 const getterAll = (env, req, res) => {
   axios.get(env).then((data) => {
@@ -64,7 +72,7 @@ const getterAll = (env, req, res) => {
         1,
       tracks: data.data
         .split(`data-track=`)
-        .map((e, index) => trackCreator(e, index))
+        .map((e, index) => trackCreator(e, index)),
     });
   });
 };
@@ -80,15 +88,16 @@ module.exports.search = async (req, res) => {
     process.env.SEARCHFULL.replace(process.env.ENGINE, req.body.name)
   );
 
-
   let data3 = Response3.data;
   res.status(200).json({
     status: "success",
-    results: data3.split("data-norber=").length-1,
+    results: data3.split("data-norber=").length - 1,
     // tracks: data1.data
     //   .split(`data-track=`)
     //   .map((e, index) => trackCreator(e, index)).concat(data2.data.split(`data-track="`).map((el, index) => trackCreator2(el,index))),
-     tracks:data3.split("data-norber=").map((el,index)=>trackCreatorSearch(el,index))
+    tracks: data3
+      .split("data-norber=")
+      .map((el, index) => trackCreatorSearch(el, index)),
   });
 };
 
