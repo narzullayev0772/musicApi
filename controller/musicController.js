@@ -94,14 +94,14 @@ module.exports.uzMusicPage = (req, res) => {
 };
 
 module.exports.ruMusic = (req, res) => {
-  trackCreatorSearch(process.env.URLRU, req, res);
+  getterAll(process.env.URLRU, req, res);
 };
 module.exports.ruMusicPage = (req, res) => {
   getterAll(process.env.URLRU + "/page/" + req.params.page, req, res);
 };
 
 module.exports.udarMusic = (req, res) => {
-  trackCreatorSearch(process.env.URLZAR, req, res);
+  getterAll(process.env.URLZAR, req, res);
 };
 module.exports.udarMusicPage = (req, res) => {
   getterAll(process.env.URLZAR + "/page/" + req.params.page, req, res);
