@@ -67,7 +67,7 @@ const trackCreatorSearch = (el, id) => {
         .replace("&amp;", "&")
         .replace(`"`, "")
         .replace(`"`, ""),
-      trackAuthor: el
+        trackAutor: el
         .split(`data-xftitle=`)[1]
         .split("data-time")[0]
         .split("-")[0]
