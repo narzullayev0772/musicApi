@@ -14,7 +14,12 @@ const {
 } = require("../controller/musicController");
 const router = express.Router();
 
-router.post("/", TopMusic);
+router.post("/", (req,res)=>{
+  res.status(200).json({
+    status:"sucess",
+    msg:"you can use my all route"
+  })
+});
 
 router.patch("/like",LikeCounter);
 
