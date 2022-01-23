@@ -1,6 +1,5 @@
 const express = require("express");
 const {
-  trackCreator,
   ruMusic,
   udarMusic,
   search,
@@ -10,8 +9,14 @@ const {
   ruMusicPage,
   udarMusicPage,
   turkMusicPage,
+  TopMusic,
+  LikeCounter,
 } = require("../controller/musicController");
 const router = express.Router();
+
+router.post("/", TopMusic);
+
+router.patch("/like",LikeCounter);
 
 router.get("/uz", uzMusic);
 router.get("/uz/:page", uzMusicPage);

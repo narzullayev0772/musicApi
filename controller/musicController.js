@@ -1,57 +1,39 @@
 const axios = require("axios").default;
 
+const myMusicModel = require("./../models/musicModel");
+
 const trackCreator = (track, id) => {
-  if (id > 0)
-    return {
-      track: track
-        .split("\ndata-title")[0]
-        .replace(`"`, "")
-        .replace("&#039;", "'")
-        .replace("&amp;", "&")
-        .replace(`"`, "")
-        .replace(`"`, ""),
-      trackName: track
-        .split(`data-title=`)[1]
-        .split("data-artist")[0]
-        .split("-")[0]
-        .replace(`"`, "")
-        .replace("&#039;", "'")
-        .replace("&amp;", "&")
-        .replace(`"`, "")
-        .replace(`"`, ""),
-      trackAutor: track
-        .split(`data-title=`)[1]
-        .split("data-artist")[0]
-        .split("-")[1]
-        .replace(`"`, "")
-        .replace("&#039;", "'")
-        .replace("&amp;", "&")
-        .replace(`"`, "")
-        .replace(`"`, ""),
-    };
+  if (id == 0) return {};
+  return {
+    id: id,
+    track: track
+      .split("\ndata-title")[0]
+      .replace(`"`, "")
+      .replace("&#039;", "'")
+      .replace("&amp;", "&")
+      .replace(`"`, "")
+      .replace(`"`, ""),
+    trackName: track
+      .split(`data-title=`)[1]
+      .split("data-artist")[0]
+      .split("-")[0]
+      .replace(`"`, "")
+      .replace("&#039;", "'")
+      .replace("&amp;", "&")
+      .replace(`"`, "")
+      .replace(`"`, ""),
+    trackAutor: track
+      .split(`data-title=`)[1]
+      .split("data-artist")[0]
+      .split("-")[1]
+      .replace(`"`, "")
+      .replace("&#039;", "'")
+      .replace("&amp;", "&")
+      .replace(`"`, "")
+      .replace(`"`, ""),
+    like: 0,
+  };
 };
-
-// const trackCreator2 = (el,index)=>{
-//   return {
-//     track: index > 0 ? el.split(".mp3")[0] + ".mp3" : null,
-//     trackName:
-//       index > 0
-//         ? el
-//             .split(`</div><div class="play-right nowrap">`)[0]
-//             .split(`<div class="play-left nowrap">`)[1]
-//             .split("-")[0]
-//         : null,
-//     trackAutor:
-//       index > 0
-//         ? el
-//             .split(`</div><div class="play-right nowrap">`)[0]
-//             .split(`<div class="play-left nowrap">`)[1]
-//             .split("-")[1].split(`</div>`)[0]
-//         : null,
-//   }
-// }
-
-module.exports = trackCreator;
 
 const trackCreatorSearch = (el, id) => {
   if (id > 0)
@@ -67,7 +49,7 @@ const trackCreatorSearch = (el, id) => {
         .replace("&amp;", "&")
         .replace(`"`, "")
         .replace(`"`, ""),
-        trackAutor: el
+      trackAutor: el
         .split(`data-xftitle=`)[1]
         .split("data-time")[0]
         .split("-")[0]
@@ -76,11 +58,20 @@ const trackCreatorSearch = (el, id) => {
         .replace("&amp;", "&")
         .replace(`"`, "")
         .replace(`"`, ""),
+      like: 0,
     };
 };
 
-const getterAll = (env, req, res) => {
-  axios.get(env).then((data) => {
+const getterAll = async (env, req, res) => {
+  let data = await axios.get(env);
+
+  try {    
+    await myMusicModel.deleteMany();
+      await myMusicModel.insertMany(
+        data.data
+          .split(`data-track=`)
+          .map((e, index) => trackCreator(e, index))
+      );
     res.status(200).json({
       status: "success",
       results:
@@ -90,16 +81,16 @@ const getterAll = (env, req, res) => {
         .split(`data-track=`)
         .map((e, index) => trackCreator(e, index)),
     });
-  });
+  } catch (error) {
+    res.status(400).json({
+      status: "failed",
+      message: "You don't used unique name or don't fill anything!",
+      error:error
+    });
+  }
 };
 
 module.exports.search = async (req, res) => {
-  // const Response1 = await axios.get(
-  //   process.env.SEARCH.replace(process.env.ENGINE, req.body.name)
-  // );
-  // const Response2 = await axios.get(
-  //   process.env.SEARCH1.replace(process.env.ENGINE, req.body.name)
-  // );
   const Response3 = await axios.get(
     process.env.SEARCHFULL.replace(process.env.ENGINE, req.body.name)
   );
@@ -108,9 +99,6 @@ module.exports.search = async (req, res) => {
   res.status(200).json({
     status: "success",
     results: data3.split("data-norber=").length - 1,
-    // tracks: data1.data
-    //   .split(`data-track=`)
-    //   .map((e, index) => trackCreator(e, index)).concat(data2.data.split(`data-track="`).map((el, index) => trackCreator2(el,index))),
     tracks: data3
       .split("data-norber=")
       .map((el, index) => trackCreatorSearch(el, index)),
@@ -143,4 +131,49 @@ module.exports.turkMusic = (req, res) => {
 };
 module.exports.turkMusicPage = (req, res) => {
   getterAll(process.env.URLTURK + "/page/" + req.params.page, req, res);
+};
+
+module.exports.TopMusic = async (req, res) => {
+  try {
+    const params = new URLSearchParams();
+    params.append("query", "Популярная музыка");
+
+    const config = {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    };
+
+    const MusicList = await axios.post(
+      "https://t9music.ru/upsearch/" + req.body.offset,
+      params,
+      config
+    );
+
+    res.json({
+      status: "success",
+      tracks: MusicList.data.list,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      message: error,
+    });
+  }
+};
+module.exports.LikeCounter = async (req, res) => {
+  try {
+    await myMusicModel.updateOne({ track: req.body.track }, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    res.status(200).json({
+      status: "success",
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "failed",
+      message: "You don't used unique name or don't fill anything!",
+    });
+  }
 };
