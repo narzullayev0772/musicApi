@@ -1,6 +1,5 @@
 const axios = require("axios").default;
 
-const myMusicModel = require("./../models/musicModel");
 
 const trackCreator = (track, id) => {
   if (id == 0) return {};
@@ -22,15 +21,15 @@ const trackCreator = (track, id) => {
       .replace("&amp;", "&")
       .replace(`"`, "")
       .replace(`"`, ""),
-    trackAutor: track
-      .split(`data-title=`)[1]
-      .split("data-artist")[0]
-      .split("-")[1]
-      .replace(`"`, "")
-      .replace("&#039;", "'")
-      .replace("&amp;", "&")
-      .replace(`"`, "")
-      .replace(`"`, ""),
+    trackAutor:track
+    .split(`data-artist=`)[1]
+    .split("data-img")[0]
+    .split("-")[0]
+    .replace(`"`, "")
+    .replace("&#039;", "'")
+    .replace("&amp;", "&")
+    .replace(`"`, "")
+    .replace(`"`, ""),
     like: 0,
   };
 };
@@ -65,29 +64,15 @@ const trackCreatorSearch = (el, id) => {
 const getterAll = async (env, req, res) => {
   let data = await axios.get(env);
 
-  try {    
-    await myMusicModel.deleteMany();
-      await myMusicModel.insertMany(
-        data.data
-          .split(`data-track=`)
-          .map((e, index) => trackCreator(e, index))
-      );
     res.status(200).json({
       status: "success",
       results:
-        data.data.split(`class="track-item fx-row fx-middle js-item"`).length -
+        data.data.split(`data-track=`).length -
         1,
       tracks: data.data
         .split(`data-track=`)
         .map((e, index) => trackCreator(e, index)),
     });
-  } catch (error) {
-    res.status(400).json({
-      status: "failed",
-      message: "You don't used unique name or don't fill anything!",
-      error:error
-    });
-  }
 };
 
 module.exports.search = async (req, res) => {
@@ -163,10 +148,6 @@ module.exports.TopMusic = async (req, res) => {
 };
 module.exports.LikeCounter = async (req, res) => {
   try {
-    await myMusicModel.updateOne({ track: req.body.track }, req.body, {
-      new: true,
-      runValidators: true,
-    });
     res.status(200).json({
       status: "success",
     });
