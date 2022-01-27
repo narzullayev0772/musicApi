@@ -8,7 +8,7 @@ process.on("uncaughtException", (err) => {
 
 const app = require(".");
 dotenv.config({ path: "./.env" });
-mongoose.connect(process.env.DATABASE_LOCAL).then(() => {
+mongoose.connect(process.env.DATABASE).then(() => {
   console.log("success connect to db");
 });
 
