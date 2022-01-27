@@ -25,7 +25,7 @@ router.post("/", (req, res) => {
 
 router.patch("/like", LikeCounter);
 
-router.get("/uz", protect, uzMusic);
+router.get("/uz", uzMusic);
 router.get("/uz/:page", uzMusicPage);
 
 router.get("/ru", ruMusic);
@@ -37,6 +37,6 @@ router.get("/udar/:page", udarMusicPage);
 router.get("/turk", turkMusic);
 router.get("/turk/:page", turkMusicPage);
 
-router.post("/search", search);
+router.post("/search", protect, search);
 
 module.exports = router;
