@@ -1,4 +1,5 @@
 const express = require("express");
+const { protect } = require("../controller/authController");
 const {
   ruMusic,
   udarMusic,
@@ -12,18 +13,19 @@ const {
   TopMusic,
   LikeCounter,
 } = require("../controller/musicController");
+
 const router = express.Router();
 
-router.post("/", (req,res)=>{
+router.post("/", (req, res) => {
   res.status(200).json({
-    status:"sucess",
-    msg:"you can use my all route"
-  })
+    status: "sucess",
+    msg: "you can use my all route",
+  });
 });
 
-router.patch("/like",LikeCounter);
+router.patch("/like", LikeCounter);
 
-router.get("/uz", uzMusic);
+router.get("/uz", protect, uzMusic);
 router.get("/uz/:page", uzMusicPage);
 
 router.get("/ru", ruMusic);
