@@ -13,6 +13,7 @@ const {
   TopMusic,
   LikeCounter,
   Comment,
+  CommentGet,
 } = require("../controller/musicController");
 
 const router = express.Router();
@@ -25,6 +26,7 @@ router.post("/", (req, res) => {
 });
 
 router.post("/comment", Comment);
+router.get("/comment", CommentGet);
 
 router.get("/uz", uzMusic);
 router.get("/uz/:page", uzMusicPage);
