@@ -5,7 +5,10 @@ const CommentScema = new mongoose.Schema({
     type: String,
     default: "User" + Date.now(),
   },
-  description: String,
+  description: {
+    type: String,
+    required: true,
+  },
   time: {
     type: Date,
     default: Date.now(),
