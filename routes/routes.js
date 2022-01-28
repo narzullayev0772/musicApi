@@ -14,6 +14,8 @@ const {
   LikeCounter,
   Comment,
   CommentGet,
+  LikeCreate,
+  GetLike,
 } = require("../controller/musicController");
 
 const router = express.Router();
@@ -27,6 +29,9 @@ router.post("/", (req, res) => {
 
 router.post("/comment", Comment);
 router.get("/comment", CommentGet);
+
+router.post("/like", LikeCreate);
+router.get("/like", GetLike);
 
 router.get("/uz", uzMusic);
 router.get("/uz/:page", uzMusicPage);

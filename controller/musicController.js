@@ -2,6 +2,7 @@ const axios = require("axios").default;
 const catchAsyn = require("./../utils/catchAsyn");
 
 const { Comment } = require("./../models/commentModel");
+const likeModel = require("./../models/likeModel");
 
 const trackCreator = (track, id) => {
   if (id == 0) return {};
@@ -162,5 +163,39 @@ module.exports.CommentGet = catchAsyn(async (req, res) => {
   res.status(200).json({
     status: "success",
     comments: allComments,
+  });
+});
+exports.LikeCreate = catchAsyn(async (req, res, next) => {
+  const likedMusicAll = await likeModel.LikeModel.find({
+    track: req.body.track,
+  });
+  let likedMusic;
+  if (likedMusicAll.length == 0) {
+    likedMusic = await likeModel.LikeModel.create(req.body);
+  } else {
+    likedMusic = await likeModel.LikeModel.updateOne(
+      { track: req.body.track },
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+  }
+
+  res.status(200).json({
+    status: "success",
+  });
+  // next();
+});
+
+exports.GetLike = catchAsyn(async (req, res, next) => {
+  const likedMusicAll = await likeModel.LikeModel.find()
+    .select("-_id")
+    .select("-__v");
+
+  res.status(200).json({
+    status: "success",
+    comments: likedMusicAll,
   });
 });
