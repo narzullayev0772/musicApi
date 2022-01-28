@@ -7,7 +7,6 @@ const CommentScema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: true,
   },
   time: {
     type: Date,
