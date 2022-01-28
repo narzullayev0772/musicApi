@@ -152,7 +152,12 @@ module.exports.TopMusic = async (req, res) => {
 };
 module.exports.Comment = catchAsyn(async (req, res) => {
   await Comment.create(req.body);
-  const allComments = await Comment.find().select("-_id").select("-__v")
+  res.status(200).json({
+    status: "success",
+  });
+});
+module.exports.CommentGet = catchAsyn(async (req, res) => {
+  const allComments = await Comment.find().select("-_id").select("-__v");
 
   res.status(200).json({
     status: "success",
