@@ -12,6 +12,7 @@ const {
   turkMusicPage,
   TopMusic,
   LikeCounter,
+  Comment,
 } = require("../controller/musicController");
 
 const router = express.Router();
@@ -23,7 +24,7 @@ router.post("/", (req, res) => {
   });
 });
 
-router.patch("/like", LikeCounter);
+router.post("/comment", Comment);
 
 router.get("/uz", uzMusic);
 router.get("/uz/:page", uzMusicPage);

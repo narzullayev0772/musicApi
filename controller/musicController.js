@@ -1,10 +1,12 @@
 const axios = require("axios").default;
+const catchAsyn = require("./../utils/catchAsyn");
 
+const { Comment } = require("./../models/commentModel");
 
 const trackCreator = (track, id) => {
   if (id == 0) return {};
   return {
-    id: id,
+    id: Date.now() + id,
     track: track
       .split("\ndata-title")[0]
       .replace(`"`, "")
@@ -21,15 +23,15 @@ const trackCreator = (track, id) => {
       .replace("&amp;", "&")
       .replace(`"`, "")
       .replace(`"`, ""),
-    trackAutor:track
-    .split(`data-artist=`)[1]
-    .split("data-img")[0]
-    .split("-")[0]
-    .replace(`"`, "")
-    .replace("&#039;", "'")
-    .replace("&amp;", "&")
-    .replace(`"`, "")
-    .replace(`"`, ""),
+    trackAutor: track
+      .split(`data-artist=`)[1]
+      .split("data-img")[0]
+      .split("-")[0]
+      .replace(`"`, "")
+      .replace("&#039;", "'")
+      .replace("&amp;", "&")
+      .replace(`"`, "")
+      .replace(`"`, ""),
     like: 0,
   };
 };
@@ -37,7 +39,7 @@ const trackCreator = (track, id) => {
 const trackCreatorSearch = (el, id) => {
   if (id > 0)
     return {
-      id: id,
+      _id: id,
       track: el.split(`data-xftitle`)[0].replace(`"`, "").replace(`"`, ""),
       trackName: el
         .split(`data-xftitle=`)[1]
@@ -64,15 +66,17 @@ const trackCreatorSearch = (el, id) => {
 const getterAll = async (env, req, res) => {
   let data = await axios.get(env);
 
-    res.status(200).json({
-      status: "success",
-      results:
-        data.data.split(`data-track=`).length -
-        1,
-      tracks: data.data
-        .split(`data-track=`)
-        .map((e, index) => trackCreator(e, index)),
-    });
+  res.status(200).json({
+    status: "success",
+    results: data.data.split(`data-track=`).length - 1,
+    tracks: data.data
+      .split(`data-track=`)
+      .map((e, index) => trackCreator(e, index)),
+  });
+  // await myMusicModel.deleteMany({})
+  // const insertDoc = data.data
+  //   .split(`data-track=`)
+  //   .map((e, index) => trackCreator(e, index));
 };
 
 module.exports.search = async (req, res) => {
@@ -90,7 +94,7 @@ module.exports.search = async (req, res) => {
   });
 };
 
-module.exports.uzMusic = (req, res) => {
+module.exports.uzMusic = async (req, res) => {
   getterAll(process.env.URLUZ, req, res);
 };
 module.exports.uzMusicPage = (req, res) => {
@@ -146,15 +150,12 @@ module.exports.TopMusic = async (req, res) => {
     });
   }
 };
-module.exports.LikeCounter = async (req, res) => {
-  try {
-    res.status(200).json({
-      status: "success",
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: "failed",
-      message: "You don't used unique name or don't fill anything!",
-    });
-  }
-};
+module.exports.Comment = catchAsyn(async (req, res) => {
+  await Comment.create(req.body);
+  const allComments = await Comment.find();
+
+  res.status(200).json({
+    status: "success",
+    comments: allComments,
+  });
+});
