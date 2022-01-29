@@ -102,8 +102,19 @@ module.exports.uzMusicPage = (req, res) => {
   getterAll(process.env.URLUZ + "/page/" + req.params.page, req, res);
 };
 
-module.exports.ruMusic = (req, res) => {
-  getterAll(process.env.URLRU, req, res);
+module.exports.ruMusic = async (req, res) => {
+  const Response3 = await axios.get(
+    process.env.SEARCHFULL.replace(process.env.ENGINE, "")
+  );
+
+  let data3 = Response3.data;
+  res.status(200).json({
+    status: "success",
+    results: data3.split("data-norber=").length - 1,
+    tracks: data3
+      .split("data-norber=")
+      .map((el, index) => trackCreatorSearch(el, index)),
+  });
 };
 module.exports.ruMusicPage = (req, res) => {
   getterAll(process.env.URLRU + "/page/" + req.params.page, req, res);
@@ -112,8 +123,19 @@ module.exports.ruMusicPage = (req, res) => {
 module.exports.udarMusic = (req, res) => {
   getterAll(process.env.URLZAR, req, res);
 };
-module.exports.udarMusicPage = (req, res) => {
-  getterAll(process.env.URLZAR + "/page/" + req.params.page, req, res);
+module.exports.udarMusicPage = async (req, res) => {
+  const Response3 = await axios.get(
+    process.env.SEARCHFULL.replace(process.env.ENGINE, "Зарубежная%20музыка")
+  );
+
+  let data3 = Response3.data;
+  res.status(200).json({
+    status: "success",
+    results: data3.split("data-norber=").length - 1,
+    tracks: data3
+      .split("data-norber=")
+      .map((el, index) => trackCreatorSearch(el, index)),
+  });
 };
 
 module.exports.turkMusic = (req, res) => {
